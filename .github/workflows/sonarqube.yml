@@ -1,0 +1,26 @@
+name: Build and Analyze with SonarQube
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: self-hosted  # Use your self-hosted runner
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures full clone for accurate analysis
+
+      # Step 2: Run SonarQube Scanner
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        shell: pwsh  # Use PowerShell shell
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
