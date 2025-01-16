@@ -5,12 +5,11 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     name: Build and analyze
-    runs-on: windows-latest
-    
+    runs-on: self-hosted  # Use the self-hosted runner
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,9 +17,8 @@ jobs:
       - uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
+          SONAR_HOST_URL: http://localhost:9000  # Local SonarQube instance
+      # Uncomment the following lines to fail the job if the Quality Gate is red
       # - uses: SonarSource/sonarqube-quality-gate-action@v1
       #   timeout-minutes: 5
       #   env:
