@@ -33,18 +33,20 @@ jobs:
           } else {
             Write-Host "sonar-scanner.bat NOT found!"
           }
-
           # Run sonar-scanner to verify if the tool is working
           sonar-scanner.bat --version
         shell: pwsh
 
       # Run the SonarQube scan
       - name: SonarQube Scan
+        env:
+          SONAR_SCANNER_HOME: "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
+          PATH: ${{ env.PATH }};${{ env.SONAR_SCANNER_HOME }}\bin
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: http://localhost:9000
+        run: |
+          sonar-scanner.bat
         uses: SonarSource/sonarqube-scan-action@v4
         with:
           scannerVersion: 6.2.1.4610
           scannerBinariesUrl: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://localhost:9000
-          INPUT_PROJECTBASEDIR: ${{ github.workspace }}
