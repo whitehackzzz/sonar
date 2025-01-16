@@ -5,48 +5,23 @@ on:
     branches:
       - main
 
+
 jobs:
   build:
     name: Build and analyze
     runs-on: windows-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis
-
-      # Set up SonarQube Scanner
-      - name: Set up SonarQube Scanner
-        run: |
-          # Set the path to the SonarQube Scanner installation folder
-          $env:SONAR_SCANNER_HOME = "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
-          # Add the scanner binary directory to PATH
-          $env:Path += ";$env:SONAR_SCANNER_HOME\bin"
-          
-          # Log the current PATH to ensure it's been updated
-          Write-Host "Current PATH: $env:Path"
-          
-          # Verify that sonar-scanner is now in the PATH and accessible
-          if (Test-Path "$env:SONAR_SCANNER_HOME\bin\sonar-scanner.bat") {
-            Write-Host "sonar-scanner.bat found!"
-          } else {
-            Write-Host "sonar-scanner.bat NOT found!"
-          }
-          # Run sonar-scanner to verify if the tool is working
-          sonar-scanner.bat --version
-        shell: pwsh
-
-      # Run the SonarQube scan
-      - name: SonarQube Scan
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: SonarSource/sonarqube-scan-action@v4
         env:
-          SONAR_SCANNER_HOME: "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
-          PATH: ${{ env.PATH }};${{ env.SONAR_SCANNER_HOME }}\bin
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://localhost:9000
-        run: |
-          sonar-scanner.bat
-        uses: SonarSource/sonarqube-scan-action@v4
-        with:
-          scannerVersion: 6.2.1.4610
-          scannerBinariesUrl: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: SonarSource/sonarqube-quality-gate-action@v1
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
