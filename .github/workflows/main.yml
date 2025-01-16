@@ -19,12 +19,11 @@ jobs:
 
       # Set up SonarQube Scanner on the Windows machine
       - name: Set up SonarQube Scanner
-  run: |
-    $env:SONAR_SCANNER_HOME = "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
-    $env:Path += ";$env:SONAR_SCANNER_HOME\bin"  # Ensure this is correctly added to PATH
-    Write-Host "Path updated: $env:Path"  # Optional: Verifies the path in the log
-    sonar-scanner --version  # Verifies if the scanner is working
-
+        run: |
+          $env:SONAR_SCANNER_HOME = "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
+          $env:Path += ";$env:SONAR_SCANNER_HOME\bin"  # Ensure this is correctly added to PATH
+          Write-Host "Path updated: $env:Path"  # Optional: Verifies the path in the log
+          sonar-scanner.bat --version  # Verifies if the scanner is working
 
       # Perform the SonarQube scan on the code
       - name: SonarQube Scan
