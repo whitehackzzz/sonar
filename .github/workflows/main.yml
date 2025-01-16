@@ -8,20 +8,23 @@ on:
 jobs:
   build:
     name: Build and analyze
-    runs-on: windows-latest
+    runs-on: windows-latest  # Ensures it runs on a Windows runner
 
     steps:
+      # Checkout the code from your repo
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis
 
+      # Set up SonarQube Scanner on the Windows machine
       - name: Set up SonarQube Scanner
         run: |
           $env:SONAR_SCANNER_HOME = "C:\Users\Abdul\Downloads\sonar-scanner-cli-6.2.1.4610-windows-x64\sonar-scanner"
           $env:Path += ";$env:SONAR_SCANNER_HOME\bin"
-          sonar-scanner --version
+          sonar-scanner --version  # Verifies if the scanner is working
 
+      # Perform the SonarQube scan on the code
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
